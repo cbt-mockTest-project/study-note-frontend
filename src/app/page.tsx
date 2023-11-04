@@ -1,16 +1,14 @@
 "use client";
+import BasicContentLayout from "@/ui/layout/BasicContentLayout";
 import { Button } from "antd";
 import styled from "styled-components";
 
 export default function Home() {
-  console.log("his");
   return (
-    <>
+    <BasicContentLayout>
       <Button>asd</Button>
-      {/* <Test>as</Test> */}
       <button>as</button>
-      <input />
-    </>
+    </BasicContentLayout>
   );
 }
 
