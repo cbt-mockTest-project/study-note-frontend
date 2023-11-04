@@ -1,13 +1,12 @@
 "use client";
 
 import BasicContentLayout from "@/ui/layout/BasicContentLayout";
-import MyNoteComponent from "@/ui/my-note/MynoteComponent";
-import PublicNoteComponent from "@/ui/public-note/PublicNoteComponent";
+import SharedStorageComponent from "@/ui/shared-storage/SharedStorageComponent";
 
 export default function Mynote() {
   return (
     <BasicContentLayout>
-      <PublicNoteComponent />
+      <SharedStorageComponent />
     </BasicContentLayout>
   );
 }

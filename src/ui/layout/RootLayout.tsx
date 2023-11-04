@@ -49,22 +49,22 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         </Link>
         <Menu
           mode="inline"
-          defaultSelectedKeys={["/public-note"]}
+          defaultSelectedKeys={["/public-storage"]}
           selectedKeys={[pathname]}
           onSelect={(item) => {
             router.push(item.key);
           }}
           items={[
-            { icon: FolderOutlined, label: "내 암기장", path: "/my-note" },
+            { icon: FolderOutlined, label: "내 암기장", path: "/my-storage" },
             {
               icon: FolderOutlined,
               label: "공유된 암기장",
-              path: "/shared-note",
+              path: "/shared-storage",
             },
             {
               icon: ShareAltOutlined,
               label: "공개 암기장",
-              path: "/public-note",
+              path: "/public-storage",
             },
             { icon: UserOutlined, label: "내 정보", path: "/user" },
           ].map((item, index) => ({
