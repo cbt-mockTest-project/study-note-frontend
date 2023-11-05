@@ -7,10 +7,12 @@ import {
   FolderOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu, Modal, Spin } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+
+import ProfileBox from "./ProfileBox";
 
 const { Sider } = Layout;
 
@@ -73,7 +75,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             label: item.label,
           }))}
         />
+        <ProfileBox />
       </Sider>
+
       {children}
     </RootLayoutBlock>
   );
