@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import useSWR from "swr";
 
-const useFolder = () => {
+const useFolders = () => {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") as FolderFilter;
 
@@ -43,4 +43,4 @@ const useFolder = () => {
   };
 };
 
-export default useFolder;
+export default useFolders;

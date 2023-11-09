@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import FolderList from "../common/folder/FolderList";
 import { Select } from "antd";
-import useFolder from "@/ui/common/folder/useFolder";
+import useFolders from "@/ui/common/folder/useFolders";
 import { useRouter } from "next/navigation";
 import { FolderFilter } from "@/types/folder";
 
@@ -17,7 +17,7 @@ interface MyStorageComponentProps {}
 
 const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
   const router = useRouter();
-  const { handleCreateFolder, isLoadingFolders, folders } = useFolder();
+  const { handleCreateFolder, isLoadingFolders, folders } = useFolders();
   return (
     <MyStorageComponentBlock>
       <Select
