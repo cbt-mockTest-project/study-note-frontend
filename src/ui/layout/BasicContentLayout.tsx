@@ -5,7 +5,10 @@ import React from "react";
 import styled from "styled-components";
 const { Content, Footer } = Layout;
 
-const BasicContentLayoutBlock = styled(Layout)``;
+const BasicContentLayoutBlock = styled(Layout)`
+  max-width: 1024px;
+  margin: 0 auto;
+`;
 
 interface BasicContentLayoutProps {
   children: React.ReactNode;
