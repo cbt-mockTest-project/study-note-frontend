@@ -1,10 +1,9 @@
 import { User } from "@/types/user";
 import axiosClient from "./axiosClient";
+import { CoreResponse } from "@/types/common";
 
-interface GetUserInfoResponse {
+interface GetUserInfoResponse extends CoreResponse {
   user: User;
-  ok: boolean;
-  error?: string;
 }
 
 export const getUserInfo = () =>
