@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { GoogleOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const LoginModalBlock = styled(Modal)`
   .login-label {
@@ -45,7 +46,15 @@ const LoginModal: React.FC<LoginModalProps> = (props) => {
           className="login-modal-google-button-link"
           href={`https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}`}
         >
-          <Button size="large" className="login-modal-google-button">
+          <Button
+            size="large"
+            className="login-modal-google-button"
+            onClick={() => {
+              setCookie("redirect", pathname, {
+                maxAge: 60 * 5,
+              });
+            }}
+          >
             <GoogleOutlined />
             <span>구글 로그인</span>
           </Button>
