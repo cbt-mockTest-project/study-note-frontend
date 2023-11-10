@@ -33,7 +33,6 @@ const useFolders = () => {
       message.error(data.error);
     } catch (e) {
       message.error("폴더를 생성할 수 없습니다.");
-      console.log(e);
     }
   };
   return {

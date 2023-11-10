@@ -1,9 +1,9 @@
-import { Folder, FolderAccess, FolderFilter } from "@/types/folder";
+import { IFolder, FolderAccess, FolderFilter } from "@/types/folder";
 import axiosClient from "./axiosClient";
 import { CoreResponse } from "@/types/common";
 
 interface GetFoldersResponse extends CoreResponse {
-  folders: Folder[];
+  folders: IFolder[];
   ok: boolean;
   error?: string;
 }
@@ -11,8 +11,11 @@ interface GetFoldersResponse extends CoreResponse {
 export const getFolders = (filter: FolderFilter) =>
   axiosClient.get<GetFoldersResponse>("/folder", { params: { filter } });
 
+export const getFolder = (id: string) =>
+  axiosClient.get<GetFoldersResponse>(`/folder/${id}`);
+
 interface CreateFoldersResponse extends CoreResponse {
-  folder: Folder;
+  folder: IFolder;
   ok: boolean;
   error?: string;
 }

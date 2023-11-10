@@ -2,8 +2,7 @@ import { colors } from "@/styles/colors";
 import React from "react";
 import styled from "styled-components";
 import { FolderOutlined } from "@ant-design/icons";
-import { Folder } from "@/types/folder";
-import { FOLDER_ACCESS_MAP } from "./Folder";
+import { IFolder } from "@/types/folder";
 
 const FolderItemBlock = styled.div`
   border-radius: 10px;
@@ -26,7 +25,7 @@ const FolderItemBlock = styled.div`
   }
 `;
 
-export interface FolderItemProps extends Folder {}
+export interface FolderItemProps extends IFolder {}
 
 const FolderItem: React.FC<FolderItemProps> = ({ name = "폴더", access }) => {
   return (

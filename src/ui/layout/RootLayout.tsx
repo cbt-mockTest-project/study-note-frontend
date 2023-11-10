@@ -29,6 +29,8 @@ const RootLayoutBlock = styled(Layout)`
       object-fit: contain;
     }
   }
+  .layout-sider {
+  }
 
   @media (max-width: ${breakpoint.lg}) {
     .ant-layout-sider {
@@ -53,11 +55,10 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
-  const pathname = usePathname();
-  const router = useRouter();
   return (
     <RootLayoutBlock>
       <Sider
+        className="layout-sider"
         theme="light"
         breakpoint="lg"
         collapsedWidth="0"
@@ -67,36 +68,11 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         <Link href="/" className="sider-header-logo">
           <Image src="/png/logo.png" alt="logo" fill />
         </Link>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["/public-storage"]}
-          selectedKeys={[pathname]}
-          onSelect={(item) => {
-            router.push(item.key);
-          }}
-          items={[
-            { icon: FolderOutlined, label: "내 암기장", path: "/my-storage" },
-            {
-              icon: FolderOutlined,
-              label: "공유된 암기장",
-              path: "/shared-storage",
-            },
-            {
-              icon: ShareAltOutlined,
-              label: "공개 암기장",
-              path: "/public-storage",
-            },
-            { icon: UserOutlined, label: "내 정보", path: "/user" },
-          ].map((item, index) => ({
-            key: item.path,
-            icon: React.createElement(item.icon),
-            label: item.label,
-          }))}
-        />
+
+        {children}
+
         <ProfileBox />
       </Sider>
-
-      {children}
     </RootLayoutBlock>
   );
 };

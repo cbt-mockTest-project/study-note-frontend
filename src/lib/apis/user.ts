@@ -1,9 +1,9 @@
-import { User } from "@/types/user";
+import { IUser } from "@/types/user";
 import axiosClient from "./axiosClient";
 import { CoreResponse } from "@/types/common";
 
 interface GetUserInfoResponse extends CoreResponse {
-  user: User;
+  user: IUser;
 }
 
 export const getUserInfo = () =>

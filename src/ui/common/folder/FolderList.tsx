@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import FolderItem from "./FolderItem";
 import FolderPlusButton from "./FolderPlusButton";
-import { Folder, FolderAccess, FolderFilter } from "@/types/folder";
+import { IFolder, FolderAccess } from "@/types/folder";
 import SkeletonBox from "../skeleton/SkeletonBox";
 import { CreateFolderInput } from "@/lib/apis/folder";
 import CreateFolderModal from "./CreateFolderModal";
@@ -27,7 +27,7 @@ const FolderListBlock = styled.ul`
 `;
 
 interface FolderListProps {
-  folders: Folder[];
+  folders: IFolder[];
   createFolder: (createFolderInput: CreateFolderInput) => void;
   isLoading?: boolean;
 }
