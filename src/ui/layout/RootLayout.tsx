@@ -2,18 +2,18 @@
 
 import React from "react";
 import styled from "styled-components";
+import { Layout } from "antd";
+import Image from "next/image";
+import Link from "next/link";
+import ProfileBox from "./ProfileBox";
+import { breakpoint } from "@/lib/responsive";
 import {
   UserOutlined,
   FolderOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Modal, Spin } from "antd";
-import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-
-import ProfileBox from "./ProfileBox";
-import { breakpoint } from "@/lib/responsive";
+import { useRouter } from "next/navigation";
+import SideMenu from "./SideMenu";
 
 const { Sider } = Layout;
 
@@ -29,9 +29,6 @@ const RootLayoutBlock = styled(Layout)`
       object-fit: contain;
     }
   }
-  .layout-sider {
-  }
-
   @media (max-width: ${breakpoint.lg}) {
     .ant-layout-sider {
       background-color: #fff;
@@ -62,17 +59,35 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         theme="light"
         breakpoint="lg"
         collapsedWidth="0"
-        onBreakpoint={(broken) => {}}
-        onCollapse={(collapsed, type) => {}}
+        trigger={null}
       >
         <Link href="/" className="sider-header-logo">
           <Image src="/png/logo.png" alt="logo" fill />
         </Link>
-
-        {children}
-
+        <SideMenu
+          onSelect={(path) => {}}
+          items={[
+            {
+              icon: <FolderOutlined />,
+              label: "내 암기장",
+              path: "/my-storage",
+            },
+            {
+              icon: <FolderOutlined />,
+              label: "공유된 암기장",
+              path: "/shared-storage",
+            },
+            {
+              icon: <ShareAltOutlined />,
+              label: "공개 암기장",
+              path: "/public-storage",
+            },
+            { icon: <UserOutlined />, label: "내 정보", path: "/user" },
+          ]}
+        />
         <ProfileBox />
       </Sider>
+      {children}
     </RootLayoutBlock>
   );
 };
