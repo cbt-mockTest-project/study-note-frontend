@@ -2,7 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
-import BasicContentLayout from "../layout/BasicContentLayout";
+import BasicContentLayout from "../../layout/BasicContentLayout";
 
 const UserComponentBlock = styled.div``;
 

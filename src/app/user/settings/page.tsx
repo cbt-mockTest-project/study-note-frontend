@@ -1,4 +1,4 @@
-import UserComponent from "@/ui/user/UserComponent";
+import UserComponent from "@/ui/user/settings/UserComponent";
 
 export default function Page() {
   return <UserComponent />;

@@ -82,7 +82,11 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
               label: "공개 암기장",
               path: "/public-storage",
             },
-            { icon: <UserOutlined />, label: "내 정보", path: "/user" },
+            {
+              icon: <UserOutlined />,
+              label: "내 정보",
+              path: "/user/settings",
+            },
           ]}
         />
         <ProfileBox />
