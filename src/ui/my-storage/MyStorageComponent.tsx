@@ -19,8 +19,9 @@ const MyStorageComponentBlock = styled.div`
 interface MyStorageComponentProps {}
 
 const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
-  // const router = useRouter();
-  const { handleCreateFolder, isLoadingFolders, folders } = useFolders();
+  const router = useRouter();
+  const { createFolder, getFoldersLoading, folders, createFolderLoading } =
+    useFolders();
   return (
     <BasicContentLayout>
       <MyStorageComponentBlock>
@@ -30,10 +31,10 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
           size="large"
           onChange={(value) => {
             if (value === FolderFilter.BOOKMARK) {
-              // router.push("/my-storage?filter=bookmark");
+              router.push("/my-storage?filter=bookmark");
             }
             if (value === FolderFilter.ME) {
-              // router.push("/my-storage?filter=me");
+              router.push("/my-storage?filter=me");
             }
           }}
           options={[
@@ -42,9 +43,10 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
           ]}
         />
         <FolderList
-          createFolder={handleCreateFolder}
+          createFolder={createFolder}
           folders={folders}
-          isLoading={isLoadingFolders}
+          getFoldersLoading={getFoldersLoading}
+          createFolderLoading={createFolderLoading}
         />
       </MyStorageComponentBlock>
     </BasicContentLayout>
