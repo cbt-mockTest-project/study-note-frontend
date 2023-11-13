@@ -10,3 +10,16 @@ export const getUserInfo = () =>
   axiosClient.get<GetUserInfoResponse>("/user/me");
 
 export const logout = () => axiosClient.post("/user/logout");
+
+export interface PatchUserInput {
+  id: number;
+  body: {
+    picture?: string;
+    nickname?: string;
+  };
+}
+
+interface PatchUserResponse extends CoreResponse {}
+
+export const patchUser = ({ id, body }: PatchUserInput) =>
+  axiosClient.patch<PatchUserResponse>(`/user/${id}`, { ...body });

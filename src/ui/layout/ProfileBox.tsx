@@ -6,6 +6,7 @@ import { logout } from "@/lib/apis/user";
 import LoginModal from "../common/login/LoginModal";
 import { Button, Layout, Menu, Modal, Spin } from "antd";
 import Image from "next/image";
+import { colors } from "@/styles/colors";
 
 const ProfileBoxBlock = styled.div`
   .root-layout-auth-wrapper {
@@ -28,6 +29,8 @@ const ProfileBoxBlock = styled.div`
   }
   .root-layout-profile-image {
     border-radius: 50%;
+    object-fit: contain;
+    background-color: ${colors.gray_50};
   }
   .root-layout-profile-nickname {
     display: block;
@@ -60,7 +63,7 @@ const ProfileBox: React.FC<ProfileBoxProps> = () => {
             <div className="root-layout-profile-wrapper">
               <Image
                 className="root-layout-profile-image"
-                src={me.data.user.picture}
+                src={me.data.user.picture || "/png/default-profile.png"}
                 alt="프로필 이미지"
                 width={25}
                 height={25}
