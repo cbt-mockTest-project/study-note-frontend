@@ -48,7 +48,7 @@ const FolderComponentBlock = styled.div`
   .folder-add-study-note-button {
     font-size: 18px;
   }
-  .folder-add-study-note-button .folder-title-wrapper {
+  .folder-title-wrapper {
     font-size: 30px;
     font-weight: 500;
     display: flex;
@@ -56,7 +56,10 @@ const FolderComponentBlock = styled.div`
     gap: 10px;
   }
   .folder-description {
-    margin-top: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: ${colors.gray_500};
   }
   .folder-setting-button-wrapper {
     display: flex;
@@ -76,7 +79,6 @@ const FolderComponentBlock = styled.div`
   }
   .folder-profile-image {
     border-radius: 50%;
-    background-color: ${colors.gray_500};
     object-fit: contain;
   }
   .folder-user-name {
