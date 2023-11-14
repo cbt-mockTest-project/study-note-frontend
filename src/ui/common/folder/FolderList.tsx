@@ -7,6 +7,8 @@ import SkeletonBox from "../skeleton/SkeletonBox";
 import { CreateFolderInput } from "@/lib/apis/folder";
 import FolderControlModal from "./FolderControlModal";
 import Link from "next/link";
+import useMe from "@/lib/hooks/useMe";
+import LoginModal from "../login/LoginModal";
 
 const FolderListBlock = styled.ul`
   display: flex;
@@ -31,7 +33,7 @@ const FolderListBlock = styled.ul`
 
 interface FolderListProps {
   folders: IFolder[];
-  createFolder: (createFolderInput: CreateFolderInput) => void;
+  createFolder: (createFolderInput: CreateFolderInput) => Promise<void>;
   getFoldersLoading: boolean;
   createFolderLoading: boolean;
 }
@@ -42,7 +44,9 @@ const FolderList: React.FC<FolderListProps> = ({
   createFolderLoading,
   createFolder,
 }) => {
+  const { me } = useMe();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [createFolderInput, setCreateFolderInput] = useState<CreateFolderInput>(
     {
       name: "",
@@ -50,9 +54,13 @@ const FolderList: React.FC<FolderListProps> = ({
     }
   );
 
+  const handlePlusButtonClick = () => {
+    if (!me?.data.ok) return setIsLoginModalVisible(true);
+    setIsCreateModalVisible(true);
+  };
   return (
     <FolderListBlock>
-      <FolderPlusButton onClick={() => setIsCreateModalVisible(true)} />
+      <FolderPlusButton onClick={handlePlusButtonClick} />
       <div className="folder-list-item-wrapper">
         {!getFoldersLoading &&
           folders.map((folder) => (
@@ -76,8 +84,8 @@ const FolderList: React.FC<FolderListProps> = ({
         onCancel={() => setIsCreateModalVisible(false)}
         okText="만들기"
         cancelText="취소"
-        onOk={() => {
-          createFolder(createFolderInput);
+        onOk={async () => {
+          await createFolder(createFolderInput);
           setIsCreateModalVisible(false);
         }}
         okButtonProps={{
@@ -91,6 +99,10 @@ const FolderList: React.FC<FolderListProps> = ({
             };
           })
         }
+      />
+      <LoginModal
+        open={isLoginModalVisible}
+        onCancel={() => setIsLoginModalVisible(false)}
       />
     </FolderListBlock>
   );
