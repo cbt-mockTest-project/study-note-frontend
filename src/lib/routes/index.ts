@@ -1,12 +1,16 @@
-export const routes: {
-  menu: {
-    [key: string]: string;
-  };
+export const routes = {
+  myStorage: "/my-storage",
+  sharedStorage: "/shared-storage",
+  publicStorage: "/public-storage",
+  userSettings: "/user/settings",
+  login: "/login",
+};
+
+export const menuMap: {
+  [key: string]: string;
 } = {
-  menu: {
-    "내 암기장": "/my-storage",
-    "공유된 암기장": "/shared-storage",
-    "공개 암기장": "/public-storage",
-    "내 정보": "/user/settings",
-  },
+  "내 암기장": "/my-storage",
+  "공유된 암기장": "/shared-storage",
+  "공개 암기장": "/public-storage",
+  "내 정보": "/user/settings",
 };
