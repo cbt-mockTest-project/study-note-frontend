@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import FolderItem from "./FolderItem";
-import FolderPlusButton from "./FolderPlusButton";
-import { IFolder, FolderAccess } from "@/types/folder";
+import { IFolder } from "@/types/folder";
 import SkeletonBox from "../skeleton/SkeletonBox";
-import { CreateFolderInput } from "@/lib/apis/folder";
-import FolderControlModal from "./FolderControlModal";
+
 import Link from "next/link";
-import useMe from "@/lib/hooks/useMe";
-import LoginModal from "../login/LoginModal";
 
 const FolderListBlock = styled.ul`
   display: flex;
@@ -33,34 +29,15 @@ const FolderListBlock = styled.ul`
 
 interface FolderListProps {
   folders: IFolder[];
-  createFolder: (createFolderInput: CreateFolderInput) => Promise<void>;
   getFoldersLoading: boolean;
-  createFolderLoading: boolean;
 }
 
 const FolderList: React.FC<FolderListProps> = ({
   folders,
   getFoldersLoading,
-  createFolderLoading,
-  createFolder,
 }) => {
-  const { me } = useMe();
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-  const [createFolderInput, setCreateFolderInput] = useState<CreateFolderInput>(
-    {
-      name: "",
-      access: FolderAccess.PUBLIC,
-    }
-  );
-
-  const handlePlusButtonClick = () => {
-    if (!me?.data.ok) return setIsLoginModalVisible(true);
-    setIsCreateModalVisible(true);
-  };
   return (
     <FolderListBlock>
-      <FolderPlusButton onClick={handlePlusButtonClick} />
       <div className="folder-list-item-wrapper">
         {!getFoldersLoading &&
           folders.map((folder) => (
@@ -79,31 +56,6 @@ const FolderList: React.FC<FolderListProps> = ({
         [1, 2, 3, 4].map((el) => (
           <SkeletonBox key={el} width="100%" height="45px" radius="10px" />
         ))}
-      <FolderControlModal
-        open={isCreateModalVisible}
-        onCancel={() => setIsCreateModalVisible(false)}
-        okText="만들기"
-        cancelText="취소"
-        onOk={async () => {
-          await createFolder(createFolderInput);
-          setIsCreateModalVisible(false);
-        }}
-        okButtonProps={{
-          loading: createFolderLoading,
-        }}
-        onChange={(createFolderInput) =>
-          setCreateFolderInput((prev) => {
-            return {
-              ...prev,
-              ...createFolderInput,
-            };
-          })
-        }
-      />
-      <LoginModal
-        open={isLoginModalVisible}
-        onCancel={() => setIsLoginModalVisible(false)}
-      />
     </FolderListBlock>
   );
 };

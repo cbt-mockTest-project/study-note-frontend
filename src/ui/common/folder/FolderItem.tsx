@@ -2,7 +2,6 @@ import { colors } from "@/styles/colors";
 import React from "react";
 import styled from "styled-components";
 import { FolderOutlined } from "@ant-design/icons";
-import { IFolder } from "@/types/folder";
 
 const FolderItemBlock = styled.div`
   border-radius: 10px;
@@ -25,11 +24,14 @@ const FolderItemBlock = styled.div`
   }
 `;
 
-export interface FolderItemProps extends IFolder {}
+export interface FolderItemProps {
+  name?: string;
+  style?: React.CSSProperties;
+}
 
-const FolderItem: React.FC<FolderItemProps> = ({ name = "폴더", access }) => {
+const FolderItem: React.FC<FolderItemProps> = ({ name = "폴더", style }) => {
   return (
-    <FolderItemBlock onClick={() => {}}>
+    <FolderItemBlock style={style}>
       <div className="folder-icon-wrapper">
         <FolderOutlined />
       </div>
