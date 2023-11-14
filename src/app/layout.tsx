@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Nanum_Gothic } from "next/font/google";
 import StyledComponentsRegistry from "@/lib/registry";
 import "./globals.css";
 import RootLayout from "@/ui/layout/RootLayout";
 
-const roboto = Roboto({ weight: ["400", "500", "700"], subsets: ["latin"] });
+const nanumGothic = Nanum_Gothic({
+  weight: ["400", "700", "800"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "모두의 암기장",
@@ -14,7 +17,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className={roboto.className}>
+      <body className={nanumGothic.className}>
         <StyledComponentsRegistry>
           <RootLayout>{children}</RootLayout>
         </StyledComponentsRegistry>

@@ -14,10 +14,10 @@ export default async function Page({
 }: {
   params: { id: string };
 }) {
-  // const data = await getFolder(id);
+  const data = await getFolder(id);
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <FolderComponent />
+      <FolderComponent folder={data.folder} />
     </Suspense>
   );
 }

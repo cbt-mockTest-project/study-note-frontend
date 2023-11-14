@@ -64,7 +64,6 @@ button {
   }
   a {
     text-decoration : none;
-    color : inherit;
   }
   input, textarea {
     border : none;

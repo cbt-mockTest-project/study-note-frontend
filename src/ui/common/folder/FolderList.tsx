@@ -5,8 +5,8 @@ import FolderPlusButton from "./FolderPlusButton";
 import { IFolder, FolderAccess } from "@/types/folder";
 import SkeletonBox from "../skeleton/SkeletonBox";
 import { CreateFolderInput } from "@/lib/apis/folder";
-import CreateFolderModal from "./CreateFolderModal";
-import { message } from "antd";
+import FolderControlModal from "./FolderControlModal";
+import Link from "next/link";
 
 const FolderListBlock = styled.ul`
   display: flex;
@@ -24,17 +24,22 @@ const FolderListBlock = styled.ul`
       display: none;
     }
   }
+  .folder-list-item-link {
+    color: black;
+  }
 `;
 
 interface FolderListProps {
   folders: IFolder[];
   createFolder: (createFolderInput: CreateFolderInput) => void;
-  isLoading?: boolean;
+  getFoldersLoading: boolean;
+  createFolderLoading: boolean;
 }
 
 const FolderList: React.FC<FolderListProps> = ({
   folders,
-  isLoading,
+  getFoldersLoading,
+  createFolderLoading,
   createFolder,
 }) => {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
@@ -44,31 +49,39 @@ const FolderList: React.FC<FolderListProps> = ({
       access: FolderAccess.PUBLIC,
     }
   );
+
   return (
     <FolderListBlock>
       <FolderPlusButton onClick={() => setIsCreateModalVisible(true)} />
       <div className="folder-list-item-wrapper">
-        {!isLoading &&
+        {!getFoldersLoading &&
           folders.map((folder) => (
-            <li key={folder.id}>
-              <FolderItem {...folder} />
-            </li>
+            <Link
+              className="folder-list-item-link"
+              key={folder.id}
+              href={`/folder/${folder.id}`}
+            >
+              <li>
+                <FolderItem {...folder} />
+              </li>
+            </Link>
           ))}
       </div>
-      {isLoading &&
+      {getFoldersLoading &&
         [1, 2, 3, 4].map((el) => (
           <SkeletonBox key={el} width="100%" height="45px" radius="10px" />
         ))}
-      <CreateFolderModal
+      <FolderControlModal
         open={isCreateModalVisible}
         onCancel={() => setIsCreateModalVisible(false)}
         okText="만들기"
         cancelText="취소"
         onOk={() => {
-          if (!createFolderInput.name.trim())
-            return message.error("제목을 입력하세요.");
           createFolder(createFolderInput);
           setIsCreateModalVisible(false);
+        }}
+        okButtonProps={{
+          loading: createFolderLoading,
         }}
         onChange={(createFolderInput) =>
           setCreateFolderInput((prev) => {

@@ -8,11 +8,8 @@ interface GetFoldersResponse extends CoreResponse {
   error?: string;
 }
 
-export const getFolders = (filter: FolderFilter) =>
+export const getFoldersAPI = (filter: FolderFilter) =>
   axiosClient.get<GetFoldersResponse>("/folder", { params: { filter } });
-
-export const getFolder = (id: string) =>
-  axiosClient.get<GetFoldersResponse>(`/folder/${id}`);
 
 interface CreateFoldersResponse extends CoreResponse {
   folder: IFolder;
@@ -26,5 +23,19 @@ export interface CreateFolderInput {
   description?: string;
 }
 
-export const createFolder = (createFolderInput: CreateFolderInput) =>
+export const createFolderAPI = (createFolderInput: CreateFolderInput) =>
   axiosClient.post<CreateFoldersResponse>("/folder", createFolderInput);
+
+export const deleteFolderAPI = (id: string) =>
+  axiosClient.delete<CoreResponse>(`/folder/${id}`);
+
+export interface PatchFolderInput {
+  name?: string;
+  access?: FolderAccess;
+  description?: string;
+}
+
+export const patchFolderAPI = (
+  id: string,
+  updateFolderInput: PatchFolderInput
+) => axiosClient.patch<CoreResponse>(`/folder/${id}`, updateFolderInput);

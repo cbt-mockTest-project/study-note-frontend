@@ -1,11 +1,11 @@
-import { CreateFolderInput } from "@/lib/apis/folder";
+import { PatchFolderInput } from "@/lib/apis/folder";
 import { FolderAccess } from "@/types/folder";
 import { Input, Modal, ModalProps, Radio } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React from "react";
 import styled from "styled-components";
 
-const CreateFolderModalBlock = styled(Modal)`
+const FolderControlModalBlock = styled(Modal)`
   .folder-modal-title {
     font-size: 20px;
     font-weight: bold;
@@ -19,14 +19,15 @@ const CreateFolderModalBlock = styled(Modal)`
   }
 `;
 
-interface CreateFolderModalProps extends Omit<ModalProps, "children"> {
-  onChange: (createFolderInput: Partial<CreateFolderInput>) => void;
+interface FolderControlModalProps extends Omit<ModalProps, "children"> {
+  onChange: (data: PatchFolderInput) => void;
+  defaultValues?: PatchFolderInput;
 }
 
-const CreateFolderModal: React.FC<CreateFolderModalProps> = (props) => {
-  const { onChange, ...modalProps } = props;
+const FolderControlModal: React.FC<FolderControlModalProps> = (props) => {
+  const { defaultValues, onChange, ...modalProps } = props;
   return (
-    <CreateFolderModalBlock {...modalProps}>
+    <FolderControlModalBlock {...modalProps}>
       <p className="folder-modal-title">폴더 만들기</p>
       <Radio.Group
         className="folder-access-radio-group"
@@ -36,7 +37,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = (props) => {
           })
         }
         size="large"
-        defaultValue={FolderAccess.PUBLIC}
+        defaultValue={defaultValues?.access || FolderAccess.PUBLIC}
       >
         <Radio value={FolderAccess.PUBLIC}>공개</Radio>
         <Radio value={FolderAccess.SECRET}>비공개</Radio>
@@ -44,6 +45,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = (props) => {
       <Input
         size="large"
         placeholder="제목을 입력하세요."
+        defaultValue={defaultValues?.name || undefined}
         onChange={(e) => {
           onChange({
             name: e.target.value,
@@ -53,14 +55,15 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = (props) => {
       <TextArea
         className="folder-modal-description"
         placeholder="설명(선택)"
+        defaultValue={defaultValues?.description || undefined}
         onChange={(e) => {
           onChange({
             description: e.target.value,
           });
         }}
       />
-    </CreateFolderModalBlock>
+    </FolderControlModalBlock>
   );
 };
 
-export default CreateFolderModal;
+export default FolderControlModal;
