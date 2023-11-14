@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import FolderList from "../common/folder/FolderList";
 import { Select } from "antd";
 import useFolders from "@/ui/common/folder/useFolders";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FolderAccess, FolderFilter } from "@/types/folder";
 import BasicContentLayout from "../layout/BasicContentLayout";
 import FolderPlusButton from "../common/folder/FolderPlusButton";
@@ -16,7 +16,6 @@ import { CreateFolderInput } from "@/lib/apis/folder";
 import FolderItem from "../common/folder/FolderItem";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
-import { colors } from "@/styles/colors";
 
 const MyStorageComponentBlock = styled.div`
   display: flex;
@@ -31,6 +30,7 @@ interface MyStorageComponentProps {}
 
 const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
   const router = useRouter();
+  const params = useSearchParams();
   const { me } = useMe();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
@@ -42,11 +42,17 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
   );
   const { createFolder, getFoldersLoading, folders, createFolderLoading } =
     useFolders();
+
   const handlePlusButtonClick = () => {
     if (!me?.data.ok) return setIsLoginModalVisible(true);
     setIsCreateModalVisible(true);
   };
-  console.log(folders);
+
+  const isMyFolder = useMemo(
+    () => params.get("filter") === FolderFilter.ME,
+    [params]
+  );
+
   return (
     <BasicContentLayout>
       <MyStorageComponentBlock>
@@ -68,7 +74,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
           ]}
         />
         <FolderPlusButton onClick={handlePlusButtonClick} />
-        {me?.data.ok && (
+        {me?.data.ok && isMyFolder && (
           <Link href={routes.myNotes}>
             <FolderItem name="전체 암기장" />
           </Link>
