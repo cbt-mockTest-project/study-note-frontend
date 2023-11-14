@@ -217,13 +217,11 @@ const UserSettingComponent: React.FC<UserSettingComponentProps> = () => {
   };
 
   useEffect(() => {
-    if (!me?.data) return;
+    if (!me) return;
     if (me.data.user.picture) setProfileImage(me.data.user.picture);
     if (me.data.user.nickname) setNickname(me.data.user.nickname);
     else setProfileImage(defaultProfileImage);
   }, [me]);
-
-  if (isLoadingMe || !me) return <div>로딩중...</div>;
 
   return (
     <BasicContentLayout>
