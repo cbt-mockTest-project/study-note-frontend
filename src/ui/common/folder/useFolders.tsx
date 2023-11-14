@@ -13,16 +13,13 @@ import useSWR from "swr";
 
 const useFolders = () => {
   const searchParams = useSearchParams();
-  const { me } = useMe();
   const filter = searchParams.get("filter") as FolderFilter;
   const [createFolderLoading, setCreateFolderLoading] = useState(false);
   const {
     data: getFoldersResponse,
     mutate: mutateFolders,
     isLoading: getFoldersLoading,
-  } = useSWR(["/folder", filter], () =>
-    me?.data.ok ? getFoldersAPI(filter) : Promise.resolve(null)
-  );
+  } = useSWR(["/folder", filter], () => getFoldersAPI(filter));
 
   const folders = useMemo(
     () => getFoldersResponse?.data.folders || [],

@@ -1,6 +1,7 @@
 import { IFolder, FolderAccess, FolderFilter } from "@/types/folder";
 import axiosClient from "./axiosClient";
 import { CoreResponse } from "@/types/common";
+import { hasAccessToken } from "../utils/hasAcessToken";
 
 interface GetFoldersResponse extends CoreResponse {
   folders: IFolder[];
@@ -8,8 +9,10 @@ interface GetFoldersResponse extends CoreResponse {
   error?: string;
 }
 
-export const getFoldersAPI = (filter: FolderFilter) =>
-  axiosClient.get<GetFoldersResponse>("/folder", { params: { filter } });
+export const getFoldersAPI = (filter: FolderFilter) => {
+  if (!hasAccessToken) return;
+  return axiosClient.get<GetFoldersResponse>("/folder", { params: { filter } });
+};
 
 interface CreateFoldersResponse extends CoreResponse {
   folder: IFolder;
