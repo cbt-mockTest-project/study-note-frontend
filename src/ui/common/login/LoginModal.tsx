@@ -5,6 +5,8 @@ import { GoogleOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { setCookie } from "cookies-next";
+import KakaoIcon from "public/svg/login/kakao-icon.svg";
+import { colors } from "@/styles/colors";
 
 const LoginModalBlock = styled(Modal)`
   .login-label {
@@ -13,6 +15,9 @@ const LoginModalBlock = styled(Modal)`
   }
   .login-modal-google-button-wrapper {
     margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   .login-modal-google-button-link {
     width: max-content;
@@ -22,15 +27,29 @@ const LoginModalBlock = styled(Modal)`
       cursor: pointer;
     }
   }
-  .login-modal-google-button {
+  .login-modal-google-button,
+  .login-modal-kakao-button {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    gap: 10px;
+    gap: 15px;
     padding: 10px 20px;
     border-radius: 10px;
     font-weight: bold;
+    span {
+      margin: 0px;
+    }
+  }
+  .login-modal-kakao-button {
+    &:hover {
+      fill: ${colors.blue_700};
+    }
+  }
+
+  .login-modal-kakao-icon {
+    width: 20px;
+    height: 20px;
   }
 `;
 
@@ -57,6 +76,23 @@ const LoginModal: React.FC<LoginModalProps> = (props) => {
           >
             <GoogleOutlined />
             <span>구글 로그인</span>
+          </Button>
+        </Link>
+        <Link
+          className="login-modal-kakao-button-link"
+          href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`}
+        >
+          <Button
+            size="large"
+            className="login-modal-kakao-button"
+            onClick={() => {
+              setCookie("redirect", pathname, {
+                maxAge: 60 * 5,
+              });
+            }}
+          >
+            <KakaoIcon class="login-modal-kakao-icon" />
+            <span>카카오 로그인</span>
           </Button>
         </Link>
       </div>
