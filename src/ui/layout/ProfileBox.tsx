@@ -54,11 +54,11 @@ const ProfileBox: React.FC<ProfileBoxProps> = () => {
         {isLoadingMe ? (
           <Spin />
         ) : (
-          !me?.data && (
+          !me?.data.ok && (
             <Button onClick={() => setLoginModalOpen(true)}>로그인</Button>
           )
         )}
-        {me?.data && (
+        {me?.data.ok && (
           <>
             <div className="root-layout-profile-wrapper">
               <Image
