@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BasicContentLayout from "../layout/BasicContentLayout";
 import { IFolder } from "@/types/folder";
 import { FolderOutlined } from "@ant-design/icons";
 import { colors } from "@/styles/colors";
 import Image from "next/image";
-import { EllipsisOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Modal, message } from "antd";
+import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Dropdown, MenuProps, Modal, Popover, message } from "antd";
 import FolderControlModal from "../common/folder/FolderControlModal";
 import { pick } from "lodash";
 import {
@@ -17,27 +17,38 @@ import {
   patchFolderAPI,
 } from "@/lib/apis/folder";
 import { useRouter } from "next/navigation";
+import StudyNoteBlank from "./StudyNoteBlank";
+import AddStudyNoteModal from "./AddStudyNoteModal";
 
 const FolderComponentBlock = styled.div`
   position: relative;
-  .folder-setting-button {
+  .folder-setting-button-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .folder-setting-button,
+  .folder-add-study-note-button {
     width: 35px;
     height: 35px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    border: 1px solid ${colors.gray_400};
+    border: 1.5px solid ${colors.gray_300};
     font-size: 25px;
     transition: background-color 0.2s ease-in-out;
     &:hover {
       background-color: ${colors.gray_100};
     }
   }
-  .folder-title-wrapper {
+  .folder-add-study-note-button {
+    font-size: 18px;
+  }
+  .folder-add-study-note-button .folder-title-wrapper {
     font-size: 30px;
     font-weight: 500;
     display: flex;
@@ -77,26 +88,6 @@ const FolderComponentBlock = styled.div`
     font-weight: 600;
     color: ${colors.gray_500};
   }
-  .folder-study-note-blank-description {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 20px;
-    align-items: center;
-    gap: 10px;
-  }
-  .folder-study-note-blank-main-text {
-    font-size: 30px;
-    font-weight: 700;
-    color: ${colors.gray_700};
-  }
-  .folder-study-note-blank-sub-text {
-    font-weight: 500;
-    color: ${colors.gray_500};
-  }
-  .folder-study-note-add-button {
-    margin-top: 20px;
-  }
 `;
 
 interface FolderComponentProps {
@@ -114,6 +105,8 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
   const [updateFolderLoading, setUpdateFolderLoading] = useState(false);
   const [deleteFolderLoading, setDeleteFolderLoading] = useState(false);
   const [isFolderControlModalVisible, setIsFolderControlModalVisible] =
+    useState(false);
+  const [isAddStudyNoteModalVisible, setIsAddStudyNoteModalVisible] =
     useState(false);
 
   const patchFolder = async () => {
@@ -187,17 +180,33 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
     //   label: <button>공유하기</button>,
     // },
   ];
+
+  useEffect(() => {
+    if (!folder) return;
+    setCurrentFolder(folder);
+  }, [folder]);
   return (
     <BasicContentLayout>
       <FolderComponentBlock>
-        <Dropdown
-          menu={{ items: folderSettingOptions }}
-          placement="bottomRight"
-        >
-          <button className="folder-setting-button">
-            <EllipsisOutlined />
-          </button>
-        </Dropdown>
+        <div className="folder-setting-button-wrapper">
+          <Popover
+            trigger="hover"
+            content="암기장 추가"
+            placement="bottomRight"
+          >
+            <button className="folder-add-study-note-button">
+              <PlusOutlined />
+            </button>
+          </Popover>
+          <Dropdown
+            menu={{ items: folderSettingOptions }}
+            placement="bottomRight"
+          >
+            <button className="folder-setting-button">
+              <EllipsisOutlined />
+            </button>
+          </Dropdown>
+        </div>
         <div className="folder-info-and-setting-wrapper">
           <div className="folder-user-info-wrapper">
             <Image
@@ -221,23 +230,11 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
         </div>
         <p className="folder-description">{currentFolder.description}</p>
         {currentFolder.studyNotes.length === 0 ? (
-          <div className="folder-study-note-blank-description">
-            <p className="folder-study-note-blank-main-text">
-              암기장이 없습니다.
-            </p>
-            <p className="folder-study-note-blank-sub-text">
-              폴더를 통해 암기장을 관리하세요.
-            </p>
-            <Button
-              className="folder-study-note-add-button"
-              type="primary"
-              size="large"
-            >
-              암기장 추가
-            </Button>
-          </div>
+          <StudyNoteBlank
+            openAddStudyModal={() => setIsAddStudyNoteModalVisible(true)}
+          />
         ) : (
-          <>폴더에 스터디 노트가 없습니다.</>
+          <>{JSON.stringify(currentFolder.studyNotes)}</>
         )}
       </FolderComponentBlock>
       {isFolderControlModalVisible && (
@@ -261,6 +258,14 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
           }}
           onOk={patchFolder}
           defaultValues={pick(currentFolder, ["access", "description", "name"])}
+        />
+      )}
+      {isAddStudyNoteModalVisible && (
+        <AddStudyNoteModal
+          open={isAddStudyNoteModalVisible}
+          currentFolder={currentFolder}
+          setCurrentFolder={setCurrentFolder}
+          onCancel={() => setIsAddStudyNoteModalVisible(false)}
         />
       )}
     </BasicContentLayout>
