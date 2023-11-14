@@ -14,6 +14,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'modu-study-note.s3.ap-northeast-2.amazonaws.com',
                 pathname:  '**'
+            },
+            {
+                protocol: 'http',
+                hostname: 'k.kakaocdn.net',
+                pathname:  '**'
             }
         ]
     },
