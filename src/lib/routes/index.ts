@@ -4,6 +4,7 @@ export const routes = {
   publicStorage: "/public-storage",
   userSettings: "/user/settings",
   login: "/login",
+  myNotes: "/my-notes",
 };
 
 export const menuMap: {
