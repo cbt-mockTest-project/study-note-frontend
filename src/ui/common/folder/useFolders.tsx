@@ -32,14 +32,17 @@ const useFolders = () => {
   const createFolder = async (createFolderInput: CreateFolderInput) => {
     try {
       setCreateFolderLoading(true);
-      if (!createFolderInput.name)
-        return message.error("폴더 이름을 입력해주세요.");
+      if (!createFolderInput.name) {
+        message.error("폴더 이름을 입력해주세요.");
+        return;
+      }
       const { data } = await createFolderAPI(createFolderInput);
       if (data.ok) {
         const copiedResponse = cloneDeep(getFoldersResponse);
         if (!copiedResponse?.data.folders) return;
         copiedResponse.data.folders.unshift(data.folder);
-        return mutateFolders(copiedResponse, false);
+        mutateFolders(copiedResponse, false);
+        return;
       }
       message.error(data.error);
     } catch (e) {

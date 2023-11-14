@@ -1,10 +1,9 @@
 import useMe from "@/lib/hooks/useMe";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { logout } from "@/lib/apis/user";
 import LoginModal from "../common/login/LoginModal";
-import { Button, Layout, Menu, Modal, Spin } from "antd";
+import { Button, Spin } from "antd";
 import Image from "next/image";
 import { colors } from "@/styles/colors";
 
@@ -46,7 +45,7 @@ const ProfileBoxBlock = styled.div`
 interface ProfileBoxProps {}
 
 const ProfileBox: React.FC<ProfileBoxProps> = () => {
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const { me, isLoadingMe } = useMe();
   return (
     <ProfileBoxBlock>
@@ -55,7 +54,7 @@ const ProfileBox: React.FC<ProfileBoxProps> = () => {
           <Spin />
         ) : (
           !me?.data.ok && (
-            <Button onClick={() => setLoginModalOpen(true)}>로그인</Button>
+            <Button onClick={() => setIsLoginModalVisible(true)}>로그인</Button>
           )
         )}
         {me?.data.ok && (
@@ -85,9 +84,8 @@ const ProfileBox: React.FC<ProfileBoxProps> = () => {
         )}
       </div>
       <LoginModal
-        open={loginModalOpen}
-        footer={false}
-        onCancel={() => setLoginModalOpen(false)}
+        open={isLoginModalVisible}
+        onCancel={() => setIsLoginModalVisible(false)}
       />
     </ProfileBoxBlock>
   );

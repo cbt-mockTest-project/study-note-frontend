@@ -58,7 +58,7 @@ interface LoginModalProps extends ModalProps {}
 const LoginModal: React.FC<LoginModalProps> = (props) => {
   const pathname = usePathname();
   return (
-    <LoginModalBlock {...props}>
+    <LoginModalBlock {...props} footer={false}>
       <p className="login-label">로그인</p>
       <div className="login-modal-google-button-wrapper">
         <Link
