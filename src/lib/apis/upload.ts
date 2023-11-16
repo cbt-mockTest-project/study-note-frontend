@@ -1,4 +1,4 @@
 import axiosClient from "./axiosClient";
 
-export const uploadImage = (data: FormData) =>
+export const uploadImageAPI = (data: FormData) =>
   axiosClient.post("/upload", data);

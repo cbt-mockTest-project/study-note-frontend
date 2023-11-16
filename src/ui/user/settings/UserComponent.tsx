@@ -8,7 +8,7 @@ import useMe from "@/lib/hooks/useMe";
 import { Button, Modal, Upload, UploadProps, message } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { colors } from "@/styles/colors";
-import { uploadImage } from "@/lib/apis/upload";
+import { uploadImageAPI } from "@/lib/apis/upload";
 import { deleteUserAPI, logout, patchUserAPI } from "@/lib/apis/user";
 import SkeletonBox from "@/ui/common/skeleton/SkeletonBox";
 import InputWithError from "@/ui/common/input/InputWithError";
@@ -139,7 +139,7 @@ const UserSettingComponent: React.FC<UserSettingComponentProps> = () => {
         const form = new FormData();
         form.append("file", options.file);
         form.append("path", "user");
-        const { data: imageData } = await uploadImage(form);
+        const { data: imageData } = await uploadImageAPI(form);
         const { data: userData } = await patchUserAPI({
           picture: imageData.url,
         });

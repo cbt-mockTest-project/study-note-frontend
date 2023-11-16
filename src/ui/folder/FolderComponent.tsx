@@ -8,7 +8,7 @@ import { FolderOutlined } from "@ant-design/icons";
 import { colors } from "@/styles/colors";
 import Image from "next/image";
 import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Modal, Popover, message } from "antd";
+import { Dropdown, MenuProps, Modal, Popover, message } from "antd";
 import FolderControlModal from "../common/folder/FolderControlModal";
 import { pick } from "lodash";
 import {

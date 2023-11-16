@@ -49,7 +49,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
   };
 
   const isMyFolder = useMemo(
-    () => params.get("filter") === FolderFilter.ME,
+    () => params.get("filter") === FolderFilter.ME || !params.has("filter"),
     [params]
   );
 

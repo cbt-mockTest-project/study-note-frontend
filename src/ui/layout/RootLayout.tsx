@@ -12,7 +12,6 @@ import {
   FolderOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
 import SideMenu from "./SideMenu";
 
 const { Sider } = Layout;
@@ -29,7 +28,11 @@ const RootLayoutBlock = styled(Layout)`
       object-fit: contain;
     }
   }
+
   @media (max-width: ${breakpoint.lg}) {
+    .layout-sider {
+      display: none;
+    }
     .ant-layout-sider {
       background-color: #fff;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);

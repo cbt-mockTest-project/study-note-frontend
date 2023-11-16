@@ -2,7 +2,7 @@ import { uploadImageAPI } from "@/lib/apis/upload";
 import { Modal, UploadFile, message } from "antd";
 import Upload, { RcFile, UploadProps } from "antd/es/upload";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import dynamic from "next/dynamic";
 import SkeletonBox from "@/ui/common/skeleton/SkeletonBox";
@@ -33,15 +33,17 @@ interface CardFormEditorProps {
   onChangeText: (text: string) => void;
   onChangeImage: (url: string) => void;
   editorPlaceholder?: string;
+  text?: string;
+  imgUrl?: string;
 }
 
 const CardFormEditor: React.FC<CardFormEditorProps> = ({
   onChangeText,
   onChangeImage,
   editorPlaceholder = "",
+  text,
+  imgUrl = "",
 }) => {
-  const [text, setText] = useState("");
-  const [imageList, setImageList] = useState<UploadFile<any>[]>([]);
   const [isImagePreviewModalOpen, setIsImagePreviewModalOpen] = useState(false);
   const [uploadImageLoading, setUploadImageLoading] = useState(false);
 
@@ -68,14 +70,6 @@ const CardFormEditor: React.FC<CardFormEditorProps> = ({
         message.error(imageData.error);
         return;
       }
-      setImageList([
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          url: imageData.url,
-        },
-      ]);
       onChangeImage(imageData.url);
       options.onSuccess("ok", options.file);
     } catch {
@@ -90,30 +84,41 @@ const CardFormEditor: React.FC<CardFormEditorProps> = ({
     multiple: false,
     listType: "picture-card",
     beforeUpload: beforeUpload,
-    fileList: imageList,
+    fileList: imgUrl
+      ? [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: imgUrl,
+          },
+        ]
+      : [],
     customRequest: customRequest,
     onPreview: () => setIsImagePreviewModalOpen(true),
-    onRemove: () => setImageList([]),
+    onRemove: () => onChangeImage(""),
   };
 
   const uploadButton = (
     <div>{uploadImageLoading ? <LoadingOutlined /> : <PlusOutlined />}</div>
   );
+
   return (
     <CardFormEditorBlock>
       <CustomEditor
         onChangeText={onChangeText}
+        text={text}
         placeholder={editorPlaceholder}
       />
-      <Upload {...uploadProps}>{imageList.length < 1 && uploadButton}</Upload>
+      <Upload {...uploadProps}>{!imgUrl && uploadButton}</Upload>
       <Modal
         open={isImagePreviewModalOpen}
         footer={null}
         onCancel={() => setIsImagePreviewModalOpen(false)}
       >
-        {imageList.length > 0 && imageList[0].url && (
+        {imgUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img alt="example" style={{ width: "100%" }} src={imageList[0].url} />
+          <img alt="example" style={{ width: "100%" }} src={imgUrl} />
         )}
       </Modal>
     </CardFormEditorBlock>

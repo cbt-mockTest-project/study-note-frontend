@@ -6,6 +6,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { IFolder } from "@/types/folder";
 import { addStudyNoteToFolderAPI } from "@/lib/apis/studyNote";
 import { IStudyNote } from "@/types/studyNote";
+import Link from "next/link";
 
 const AddStudyNoteModalBlock = styled(Modal)`
   .my-study-notes-list {
@@ -47,8 +48,11 @@ const AddStudyNoteModal: React.FC<AddStudyNoteModalProps> = (props) => {
     }
   };
   return (
-    <AddStudyNoteModalBlock {...modalProps} title="암기장 추가">
+    <AddStudyNoteModalBlock {...modalProps} footer={false} title="암기장 추가">
       <ul className="my-study-notes-list">
+        <Link href="/study-note/create">
+          <Button type="dashed">새로운 암기장 만들기</Button>
+        </Link>
         {myStudyNotes.map((studyNote) => (
           <li className="my-study-notes-list-item" key={studyNote.id}>
             <p>{studyNote.name}</p>
