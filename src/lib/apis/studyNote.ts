@@ -48,3 +48,25 @@ export const removeStudyNoteFromFolderAPI = (
     "/study-note/remove-from-folder",
     removeStudyNoteFromFolderInput
   );
+
+export interface StudyCardsForStudyNote {
+  question?: string;
+  answer?: string;
+  question_img?: string;
+  answer_img?: string;
+  id?: number;
+  noteId?: number;
+}
+
+interface SaveStudyNoteInput {
+  name: string;
+  noteId?: number;
+  studyCards: StudyCardsForStudyNote[];
+}
+
+interface SaveStudyNoteResponse extends CoreResponse {
+  studyNote: IStudyNote;
+}
+
+export const saveStudyNoteAPI = (studyNoteInput: SaveStudyNoteInput) =>
+  axiosClient.post<SaveStudyNoteResponse>("/study-note", studyNoteInput);
