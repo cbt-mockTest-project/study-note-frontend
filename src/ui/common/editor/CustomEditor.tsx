@@ -56,11 +56,13 @@ const ReactQuillWrapper = dynamic(
 );
 
 interface CustomEditorProps {
+  text?: string;
   onChangeText: (value: string) => void;
   placeholder?: string;
 }
 
 const CustomEditor: React.FC<CustomEditorProps> = ({
+  text,
   onChangeText,
   placeholder = "내용을 작성해주세요.",
 }) => {
@@ -114,7 +116,8 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
     return () => {
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
-  }, []);
+  }, [toolbarPosition]);
+
   return (
     <CustomEditorBlock data-key={uniqueKey}>
       <CustomToolbar
@@ -129,6 +132,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         modules={modules}
         onChange={onChangeText}
         placeholder={placeholder}
+        value={text}
       />
     </CustomEditorBlock>
   );
