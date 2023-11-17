@@ -1,3 +1,4 @@
+import { IStudyCard } from "./studyCard";
 import { IUser } from "./user";
 
 export interface IStudyNote {
@@ -7,4 +8,5 @@ export interface IStudyNote {
   name: string;
   studyCardOrder: number[];
   user: IUser;
+  studyCards: IStudyCard[];
 }
