@@ -58,8 +58,9 @@ export interface StudyCardsForStudyNote {
   noteId?: number;
 }
 
-interface SaveStudyNoteInput {
+export interface SaveStudyNoteInput {
   name: string;
+  folderId: number;
   noteId?: number;
   studyCards: StudyCardsForStudyNote[];
 }
@@ -70,3 +71,12 @@ interface SaveStudyNoteResponse extends CoreResponse {
 
 export const saveStudyNoteAPI = (studyNoteInput: SaveStudyNoteInput) =>
   axiosClient.post<SaveStudyNoteResponse>("/study-note", studyNoteInput);
+
+interface GetStudyNoteForEditResponse extends CoreResponse {
+  studyNote: IStudyNote;
+}
+
+export const getStudyNoteForEditAPI = (studyNoteId: string) =>
+  axiosClient.get<GetStudyNoteForEditResponse>(
+    `/study-note/edit/${studyNoteId}`
+  );
