@@ -88,13 +88,6 @@ const CreateStudyNoteComponentBlock = styled.div`
     color: ${colors.gray_900};
   }
 
-  .card-form-reorder-item {
-    background-color: ${colors.white};
-    border-radius: 10px;
-    padding: 20px;
-    list-style: none;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  }
   .card-form-add-button-wrapper {
     display: flex;
     justify-content: center;

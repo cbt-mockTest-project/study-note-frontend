@@ -3,6 +3,13 @@ import axiosClient from "./axiosClient";
 import { CoreResponse } from "@/types/common";
 import { hasAccessToken } from "../utils/hasAcessToken";
 
+interface GetFolderResponse extends CoreResponse {
+  folder: IFolder;
+}
+
+export const getFolderAPI = (id: string) =>
+  axiosClient.get<GetFolderResponse>(`/folder/${id}`);
+
 interface GetFoldersResponse extends CoreResponse {
   folders: IFolder[];
   ok: boolean;

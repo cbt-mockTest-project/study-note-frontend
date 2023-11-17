@@ -7,20 +7,20 @@ const StudyNoteBlankBlock = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 30px;
   align-items: center;
   gap: 10px;
   .study-note-blank-main-text {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 700;
-    color: ${colors.gray_700};
+    color: ${colors.gray_600};
   }
   .study-note-blank-sub-text {
     font-weight: 500;
     color: ${colors.gray_500};
   }
   .study-note-add-button {
-    margin-top: 20px;
+    margin-top: 10px;
   }
 `;
 
@@ -40,7 +40,6 @@ const StudyNoteBlank: React.FC<StudyNoteBlankProps> = ({
       <Button
         className="study-note-add-button"
         type="primary"
-        size="large"
         onClick={openAddStudyModal}
       >
         암기장 추가

@@ -8,11 +8,19 @@ import styled from "styled-components";
 import CardFormItem from "./CardFormItem";
 import { Draggable } from "react-beautiful-dnd";
 import { cloneDeep } from "lodash";
+import { colors } from "@/styles/colors";
 
 const CardFormListBlock = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  .card-form-reorder-item {
+    background-color: ${colors.white};
+    border-radius: 10px;
+    padding: 20px;
+    list-style: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
 `;
 
 export interface ChangeCardArgs {

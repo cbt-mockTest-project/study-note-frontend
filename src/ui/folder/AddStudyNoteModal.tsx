@@ -1,5 +1,5 @@
-import { Button, Card, Modal, ModalProps, message } from "antd";
-import React, { Dispatch, SetStateAction } from "react";
+import { Button, Modal, ModalProps, message } from "antd";
+import React from "react";
 import styled from "styled-components";
 import useMyStudyNotes from "./useMyStudyNotes";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
@@ -25,23 +25,20 @@ const AddStudyNoteModalBlock = styled(Modal)`
 `;
 
 interface AddStudyNoteModalProps extends Omit<ModalProps, "children"> {
-  setCurrentFolder: Dispatch<SetStateAction<IFolder>>;
-  currentFolder: IFolder;
+  folder: IFolder;
+  setNotes: (studyNotes: IStudyNote[]) => void;
 }
 
 const AddStudyNoteModal: React.FC<AddStudyNoteModalProps> = (props) => {
   const { myStudyNotes } = useMyStudyNotes();
-  const { currentFolder, setCurrentFolder, ...modalProps } = props;
+  const { folder, setNotes, ...modalProps } = props;
   const addStudyNoteToFolder = async (studyNote: IStudyNote) => {
     try {
       const { data } = await addStudyNoteToFolderAPI({
         studyNoteId: studyNote.id,
-        folderId: currentFolder.id,
+        folderId: folder.id,
       });
-      setCurrentFolder((prev) => ({
-        ...prev,
-        studyNotes: [...prev.studyNotes, studyNote],
-      }));
+      setNotes([...folder.studyNotes, studyNote]);
       if (data.error) return message.error(data.error);
     } catch {
       message.error("암기장 추가에 실패했습니다.");
@@ -50,7 +47,7 @@ const AddStudyNoteModal: React.FC<AddStudyNoteModalProps> = (props) => {
   return (
     <AddStudyNoteModalBlock {...modalProps} footer={false} title="암기장 추가">
       <ul className="my-study-notes-list">
-        <Link href={`/study-note/create?fid=${currentFolder.id}`}>
+        <Link href={`/study-note/create?fid=${folder.id}`}>
           <Button type="dashed">새로운 암기장 만들기</Button>
         </Link>
         {myStudyNotes.map((studyNote) => (
