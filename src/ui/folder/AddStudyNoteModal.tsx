@@ -50,7 +50,7 @@ const AddStudyNoteModal: React.FC<AddStudyNoteModalProps> = (props) => {
   return (
     <AddStudyNoteModalBlock {...modalProps} footer={false} title="암기장 추가">
       <ul className="my-study-notes-list">
-        <Link href="/study-note/create">
+        <Link href={`/study-note/create?fid=${currentFolder.id}`}>
           <Button type="dashed">새로운 암기장 만들기</Button>
         </Link>
         {myStudyNotes.map((studyNote) => (
