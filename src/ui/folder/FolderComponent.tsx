@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import BasicContentLayout from "../layout/BasicContentLayout";
-import { IFolder } from "@/types/folder";
 import { FolderOutlined } from "@ant-design/icons";
 import { colors } from "@/styles/colors";
 import Image from "next/image";
@@ -19,6 +18,9 @@ import {
 import { useRouter } from "next/navigation";
 import StudyNoteBlank from "./StudyNoteBlank";
 import AddStudyNoteModal from "./AddStudyNoteModal";
+import StudyNoteList from "./StudyNoteList";
+import useFolder from "./useFolder";
+import FolderSkeleton from "./FolderSkeleton";
 
 const FolderComponentBlock = styled.div`
   position: relative;
@@ -49,7 +51,7 @@ const FolderComponentBlock = styled.div`
     font-size: 18px;
   }
   .folder-title-wrapper {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -93,16 +95,16 @@ const FolderComponentBlock = styled.div`
 `;
 
 interface FolderComponentProps {
-  folder: IFolder;
+  id: string;
 }
 
-const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
+const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
   const router = useRouter();
-  const [currentFolder, setCurrentFolder] = useState(folder);
+  const { folder, setFolder, setNotes, isLoadingFolder } = useFolder(id);
   const [updateFolderInput, setUpdateFolderInput] = useState<PatchFolderInput>({
-    name: folder.name,
-    description: folder.description,
-    access: folder.access,
+    name: folder?.name,
+    description: folder?.description,
+    access: folder?.access,
   });
   const [updateFolderLoading, setUpdateFolderLoading] = useState(false);
   const [deleteFolderLoading, setDeleteFolderLoading] = useState(false);
@@ -113,20 +115,16 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
 
   const patchFolder = async () => {
     try {
+      if (!folder) return message.error("폴더를 찾을 수 없습니다.");
       setUpdateFolderLoading(true);
       if (!updateFolderInput.name?.trim())
         return message.error("제목을 입력하세요.");
       const { data } = await patchFolderAPI(
-        String(currentFolder.id),
+        String(folder.id),
         updateFolderInput
       );
       if (data.ok) {
-        setCurrentFolder((prev) => {
-          return {
-            ...prev,
-            ...updateFolderInput,
-          };
-        });
+        setFolder({ ...folder, ...updateFolderInput });
       } else message.error(data.error);
     } catch {
       message.error("폴더를 수정하는데 실패했습니다.");
@@ -148,10 +146,9 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
               },
               onOk: async () => {
                 try {
+                  if (!folder) return message.error("폴더를 찾을 수 없습니다.");
                   setDeleteFolderLoading(true);
-                  const { data } = await deleteFolderAPI(
-                    String(currentFolder.id)
-                  );
+                  const { data } = await deleteFolderAPI(String(folder.id));
                   if (data.ok) message.success("폴더를 삭제했습니다.");
                   else message.error(data.error);
                   router.push("/my-storage");
@@ -183,10 +180,8 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
     // },
   ];
 
-  useEffect(() => {
-    if (!folder) return;
-    setCurrentFolder(folder);
-  }, [folder]);
+  if (!folder || isLoadingFolder) return <FolderSkeleton />;
+
   return (
     <BasicContentLayout>
       <FolderComponentBlock>
@@ -196,7 +191,10 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
             content="암기장 추가"
             placement="bottomRight"
           >
-            <button className="folder-add-study-note-button">
+            <button
+              className="folder-add-study-note-button"
+              onClick={() => setIsAddStudyNoteModalVisible(true)}
+            >
               <PlusOutlined />
             </button>
           </Popover>
@@ -213,30 +211,32 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
           <div className="folder-user-info-wrapper">
             <Image
               className="folder-profile-image"
-              src={currentFolder.user.picture}
+              src={folder.user.picture}
               alt="프로필 이미지"
               width={25}
               height={25}
             />
             <div>
-              <span className="folder-user-name">
-                {currentFolder.user.nickname}
-              </span>
+              <span className="folder-user-name">{folder.user.nickname}</span>
               <span className="folder-user-name-suffix"> 님의 폴더</span>
             </div>
           </div>
         </div>
         <div className="folder-title-wrapper">
           <FolderOutlined />
-          <h1>{currentFolder.name}</h1>
+          <h1>{folder.name}</h1>
         </div>
-        <p className="folder-description">{currentFolder.description}</p>
-        {currentFolder.studyNotes.length === 0 ? (
+        <p className="folder-description">{folder.description}</p>
+        {folder.studyNotes.length === 0 ? (
           <StudyNoteBlank
             openAddStudyModal={() => setIsAddStudyNoteModalVisible(true)}
           />
         ) : (
-          <>{JSON.stringify(currentFolder.studyNotes)}</>
+          <StudyNoteList
+            studyNotes={folder.studyNotes}
+            folderId={folder.id}
+            setNotes={setNotes}
+          />
         )}
       </FolderComponentBlock>
       {isFolderControlModalVisible && (
@@ -259,14 +259,14 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ folder }) => {
             setIsFolderControlModalVisible(false);
           }}
           onOk={patchFolder}
-          defaultValues={pick(currentFolder, ["access", "description", "name"])}
+          defaultValues={pick(folder, ["access", "description", "name"])}
         />
       )}
       {isAddStudyNoteModalVisible && (
         <AddStudyNoteModal
           open={isAddStudyNoteModalVisible}
-          currentFolder={currentFolder}
-          setCurrentFolder={setCurrentFolder}
+          folder={folder}
+          setNotes={setNotes}
           onCancel={() => setIsAddStudyNoteModalVisible(false)}
         />
       )}
