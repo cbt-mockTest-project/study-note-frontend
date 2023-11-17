@@ -1,6 +1,9 @@
-import { StudyCardsForStudyNote } from "@/lib/apis/studyNote";
+import {
+  SaveStudyNoteInput,
+  StudyCardsForStudyNote,
+} from "@/lib/apis/studyNote";
 import DragDropContextWrapper from "@/ui/common/dragAndDrop/DragDropContextWrapper";
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import CardFormItem from "./CardFormItem";
 import { Draggable } from "react-beautiful-dnd";
@@ -21,33 +24,39 @@ export interface ChangeCardArgs {
 }
 
 interface CardFormListProps {
-  studyCards: StudyCardsForStudyNote[];
-  setStudyCards: React.Dispatch<React.SetStateAction<StudyCardsForStudyNote[]>>;
+  studyNoteForm: SaveStudyNoteInput;
+  setStudyCards: (cards: StudyCardsForStudyNote[]) => void;
   removeCard: (index: number) => void;
+  removeCardLoading: boolean;
 }
 
 const CardFormList: React.FC<CardFormListProps> = ({
-  studyCards,
+  studyNoteForm,
   setStudyCards,
   removeCard,
+  removeCardLoading,
 }) => {
-  const onChangeCard = (args: ChangeCardArgs) => {
-    const { index, question, answer, question_img, answer_img } = args;
-    const newStudyCards = cloneDeep(studyCards);
-    if (question_img) newStudyCards[index].question_img = question_img;
-    if (answer_img) newStudyCards[index].answer_img = answer_img;
-    if (answer) newStudyCards[index].answer = answer;
-    if (question) newStudyCards[index].question = question;
-    setStudyCards(newStudyCards);
-  };
+  const onChangeCard = useCallback(
+    (args: ChangeCardArgs) => {
+      if (removeCardLoading) return;
+      const { index, question, answer, question_img, answer_img } = args;
+      const newStudyCards = cloneDeep(studyNoteForm.studyCards);
+      if (question_img) newStudyCards[index]["question_img"] = question_img;
+      if (answer_img) newStudyCards[index]["answer_img"] = answer_img;
+      if (answer) newStudyCards[index]["answer"] = answer;
+      if (question) newStudyCards[index]["question"] = question;
+      setStudyCards(newStudyCards);
+    },
+    [removeCardLoading, studyNoteForm]
+  );
   return (
     <DragDropContextWrapper
-      form={studyCards}
+      form={studyNoteForm.studyCards}
       setForm={setStudyCards}
       droppableId="study-card-droppable"
     >
       <CardFormListBlock>
-        {studyCards.map((card, index) => {
+        {studyNoteForm.studyCards.map((card, index) => {
           return (
             <Draggable index={index} key={index} draggableId={index + ""}>
               {(provided) => (
@@ -65,7 +74,7 @@ const CardFormList: React.FC<CardFormListProps> = ({
                     onChangeCard={onChangeCard}
                     removeCard={() => removeCard(card.id || 0)}
                     dragHandleProps={provided.dragHandleProps}
-                    deleteButtonVisible={studyCards.length > 1}
+                    deleteButtonVisible={studyNoteForm.studyCards.length > 1}
                   />
                 </div>
               )}
