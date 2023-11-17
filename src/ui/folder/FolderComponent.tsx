@@ -1,13 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BasicContentLayout from "../layout/BasicContentLayout";
 import { FolderOutlined } from "@ant-design/icons";
 import { colors } from "@/styles/colors";
 import Image from "next/image";
 import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
-import { Dropdown, MenuProps, Modal, Popover, message } from "antd";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Popover,
+  message,
+} from "antd";
 import FolderControlModal from "../common/folder/FolderControlModal";
 import { pick } from "lodash";
 import {
@@ -92,6 +100,16 @@ const FolderComponentBlock = styled.div`
     font-weight: 600;
     color: ${colors.gray_500};
   }
+  .folder-study-start-button {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  .folder-study-all-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+  }
 `;
 
 interface FolderComponentProps {
@@ -106,6 +124,7 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
     description: folder?.description,
     access: folder?.access,
   });
+  const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
   const [updateFolderLoading, setUpdateFolderLoading] = useState(false);
   const [deleteFolderLoading, setDeleteFolderLoading] = useState(false);
   const [isFolderControlModalVisible, setIsFolderControlModalVisible] =
@@ -173,12 +192,10 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
         </button>
       ),
     },
-    // TODO: 공유하기 기능 구현
-    // {
-    //   key: 3,
-    //   label: <button>공유하기</button>,
-    // },
   ];
+  useEffect(() => {
+    console.log(selectedNoteIds);
+  }, [selectedNoteIds]);
 
   if (!folder || isLoadingFolder) return <FolderSkeleton />;
 
@@ -227,6 +244,32 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
           <h1>{folder.name}</h1>
         </div>
         <p className="folder-description">{folder.description}</p>
+        {folder.studyNotes.length > 0 && (
+          <>
+            <Button
+              className="folder-study-start-button"
+              type="primary"
+              disabled={selectedNoteIds.length === 0}
+            >
+              학습하기
+            </Button>
+            <div className="folder-study-all-checkbox-wrapper">
+              <Checkbox
+                checked={folder.studyNotes.length === selectedNoteIds.length}
+                onClick={() => {
+                  if (folder.studyNotes.length === selectedNoteIds.length)
+                    setSelectedNoteIds([]);
+                  else
+                    setSelectedNoteIds(
+                      folder.studyNotes.map((studyNote) => studyNote.id)
+                    );
+                }}
+              />
+              <span>전체 선택</span>
+            </div>
+          </>
+        )}
+
         {folder.studyNotes.length === 0 ? (
           <StudyNoteBlank
             openAddStudyModal={() => setIsAddStudyNoteModalVisible(true)}
@@ -234,6 +277,8 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
         ) : (
           <StudyNoteList
             studyNotes={folder.studyNotes}
+            setSelectedNoteIds={setSelectedNoteIds}
+            selectedNoteIds={selectedNoteIds}
             folderId={folder.id}
             setNotes={setNotes}
           />

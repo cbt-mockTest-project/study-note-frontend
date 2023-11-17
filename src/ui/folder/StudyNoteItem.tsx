@@ -57,6 +57,8 @@ const StudyNoteItemBlock = styled.div`
 `;
 
 interface StudyNoteItemProps {
+  selectedNoteIds: number[];
+  setSelectedNoteIds: (selectedStudyNoteIds: number[]) => void;
   studyNote: IStudyNote;
   folderId: number;
   removeNoteFromFolder: (studyNoteId: number) => void;
@@ -66,10 +68,23 @@ const StudyNoteItem: React.FC<StudyNoteItemProps> = ({
   studyNote,
   removeNoteFromFolder,
   folderId,
+  selectedNoteIds,
+  setSelectedNoteIds,
 }) => {
   return (
     <StudyNoteItemBlock>
-      <Checkbox />
+      <Checkbox
+        checked={selectedNoteIds.includes(studyNote.id)}
+        onClick={() => {
+          if (selectedNoteIds.includes(studyNote.id)) {
+            setSelectedNoteIds(
+              selectedNoteIds.filter((id) => id !== studyNote.id)
+            );
+          } else {
+            setSelectedNoteIds([...selectedNoteIds, studyNote.id]);
+          }
+        }}
+      />
       <Link
         className="study-note-link"
         href={`/study-note/create?fid=${folderId}&nid=${studyNote.id}`}
