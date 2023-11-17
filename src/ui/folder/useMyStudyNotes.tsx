@@ -8,19 +8,6 @@ const useMyStudyNotes = () => {
     mutate: mutateMyStudyNotes,
     isLoading: getMyStudyNotesLoading,
   } = useSWR("/study-note/me", getMyStudyNotesAPI);
-  const setMyStudyNotes = (studyNotes: IStudyNote[]) => {
-    if (!myStudyNotesResponse) return;
-    mutateMyStudyNotes(
-      {
-        ...myStudyNotesResponse,
-        data: {
-          ...myStudyNotesResponse.data,
-          studyNotes,
-        },
-      },
-      false
-    );
-  };
 
   return {
     myStudyNotes: myStudyNotesResponse?.data.studyNotes || [],

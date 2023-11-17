@@ -25,7 +25,7 @@ interface AddStudyNoteModalProps extends Omit<ModalProps, "children"> {
 }
 
 const AddStudyNoteModal: React.FC<AddStudyNoteModalProps> = (props) => {
-  const { myStudyNotes, setMyStudyNotes } = useMyStudyNotes();
+  const { myStudyNotes } = useMyStudyNotes();
   const { folder, setNotes, ...modalProps } = props;
   const addStudyNoteToFolder = async (studyNote: IStudyNote) => {
     try {
