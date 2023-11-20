@@ -7,3 +7,9 @@ export interface IStudyCard {
   question_img: string;
   answer_img: string;
 }
+
+export enum CardScoreLevel {
+  HiGH = "HIGH",
+  MEDIUM = "MEDIUM",
+  LOW = "LOW",
+}

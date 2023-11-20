@@ -29,6 +29,7 @@ import AddStudyNoteModal from "./AddStudyNoteModal";
 import StudyNoteList from "./StudyNoteList";
 import useFolder from "./useFolder";
 import FolderSkeleton from "./FolderSkeleton";
+import StudySelectModal from "./StudySelectModal";
 
 const FolderComponentBlock = styled.div`
   position: relative;
@@ -130,6 +131,8 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
   const [isFolderControlModalVisible, setIsFolderControlModalVisible] =
     useState(false);
   const [isAddStudyNoteModalVisible, setIsAddStudyNoteModalVisible] =
+    useState(false);
+  const [isStudyStartModalVisible, setIsStudyStartModalVisible] =
     useState(false);
 
   const patchFolder = async () => {
@@ -250,6 +253,7 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
               className="folder-study-start-button"
               type="primary"
               disabled={selectedNoteIds.length === 0}
+              onClick={() => setIsStudyStartModalVisible(true)}
             >
               학습하기
             </Button>
@@ -313,6 +317,14 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
           folder={folder}
           setNotes={setNotes}
           onCancel={() => setIsAddStudyNoteModalVisible(false)}
+        />
+      )}
+      {isStudyStartModalVisible && (
+        <StudySelectModal
+          footer={null}
+          studyNoteIds={selectedNoteIds}
+          open={isStudyStartModalVisible}
+          onCancel={() => setIsStudyStartModalVisible(false)}
         />
       )}
     </BasicContentLayout>

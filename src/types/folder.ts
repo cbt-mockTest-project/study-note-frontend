@@ -22,3 +22,15 @@ export enum FolderFilter {
   BOOKMARK = "bookmark",
   ME = "me",
 }
+
+export enum StudyMode {
+  CARD = "card",
+  ANSWER = "answer",
+  TYPYING = "typing",
+}
+
+export enum StudyScore {
+  HIGH = "high",
+  LOW = "low",
+  NONE = "none",
+}
