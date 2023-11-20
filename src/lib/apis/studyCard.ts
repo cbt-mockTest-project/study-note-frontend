@@ -7,14 +7,14 @@ interface GetStudyCardsFromNoteIdsResponse extends CoreResponse {
   studyCards: IStudyCard[];
 }
 
-interface GetStudyCardsFromNoteIdsInput {
+export interface GetStudyCardsFromNoteIdsInput {
   studyNoteIds: string;
-  limit: string;
-  mode?: string;
+  limit?: string;
+  order?: string;
   scores?: string;
 }
 
-export const GetStudyCardsFromNoteIdsAPI = (
+export const getStudyCardsFromNoteIdsAPI = (
   getStudyCardsFromNoteIdsInput: GetStudyCardsFromNoteIdsInput
 ) =>
   axiosClient.get<GetStudyCardsFromNoteIdsResponse>(

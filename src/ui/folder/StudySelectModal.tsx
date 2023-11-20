@@ -71,8 +71,7 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
   };
 
   const handleStart = () => {
-    const params = addQueryParams("/study", {
-      mode,
+    const params = addQueryParams(`/study/${mode}`, {
       order: isRandom ? "random" : "normal",
       scores: scores.join(","),
       limit: limit ? limit.toString() : "",

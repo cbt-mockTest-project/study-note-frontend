@@ -18,6 +18,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { removeHtmlTag } from "@/lib/utils/removeHtmlTag";
 import { LeftOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import BasicHeader from "@/ui/layout/BasicHeader";
+import BasicBody from "@/ui/layout/BasicBody";
 
 const CardFormList = dynamic(() => import("./CardFormList"), {
   ssr: false,
@@ -42,15 +44,7 @@ const CreateStudyNoteComponentBlock = styled.div`
     align-items: center;
     gap: 10px;
   }
-  .create-study-note-header {
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    border-bottom: 1px solid ${colors.gray_300};
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
-    background-color: ${colors.white};
-    z-index: 1;
-  }
+
   .create-study-note-updated-at {
     font-size: 12px;
     color: ${colors.gray_500};
@@ -68,20 +62,7 @@ const CreateStudyNoteComponentBlock = styled.div`
       border-bottom: 1px solid ${colors.gray_300};
     }
   }
-  .create-study-note-header-inner {
-    padding: 10px 20px;
-    max-width: 1280px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-  }
-  .create-study-note-body {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0px 20px 20px 20px;
-  }
+
   .create-study-note-title {
     font-size: 18px;
     font-weight: bold;
@@ -241,22 +222,20 @@ const CreateStudyNoteComponent: React.FC<
 
   return (
     <CreateStudyNoteComponentBlock>
-      <div className="create-study-note-header">
-        <div className="create-study-note-header-inner">
-          <Link
-            className="create-study-note-prev-folder-link"
-            href={`/folder/${folderId}`}
-          >
-            <LeftOutlined />
-            <span>폴더</span>
-          </Link>
-          <h1 className="create-study-note-title">암기장 만들기</h1>
-          <Button type="primary" onClick={saveStudyNote} loading={saveLoading}>
-            저장
-          </Button>
-        </div>
-      </div>
-      <div className="create-study-note-body">
+      <BasicHeader className="create-study-note-header">
+        <Link
+          className="create-study-note-prev-folder-link"
+          href={`/folder/${folderId}`}
+        >
+          <LeftOutlined />
+          <span>폴더</span>
+        </Link>
+        <h1 className="create-study-note-title">암기장 만들기</h1>
+        <Button type="primary" onClick={saveStudyNote} loading={saveLoading}>
+          저장
+        </Button>
+      </BasicHeader>
+      <BasicBody>
         <Input
           className="create-study-note-title-input"
           ref={nameRef}
@@ -284,7 +263,7 @@ const CreateStudyNoteComponent: React.FC<
           <PlusOutlined />
           <span>카드 추가</span>
         </Button>
-      </div>
+      </BasicBody>
     </CreateStudyNoteComponentBlock>
   );
 };

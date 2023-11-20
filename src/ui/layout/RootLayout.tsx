@@ -60,7 +60,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
       <Sider
         className="layout-sider"
         theme="light"
-        breakpoint="lg"
         collapsedWidth="0"
         trigger={null}
       >
