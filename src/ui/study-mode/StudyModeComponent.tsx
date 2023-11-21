@@ -72,7 +72,9 @@ const StudyModeComponent: React.FC<StudyModeComponentProps> = ({ mode }) => {
           <AnswerModeComponent studyCards={studyCards} />
         )}
         {mode === StudyMode.CARD && studyCards && <CardModeComponent />}
-        {mode === StudyMode.TYPYING && studyCards && <TypingModeComponent />}
+        {mode === StudyMode.TYPYING && studyCards && (
+          <TypingModeComponent studyCards={studyCards} />
+        )}
       </BasicBody>
     </StudyModeComponentBlock>
   );

@@ -1,9 +1,12 @@
+import { IStudyCard } from "@/types/studyCard";
 import React from "react";
 import styled from "styled-components";
 
 const TypingModeComponentBlock = styled.div``;
 
-interface TypingModeComponentProps {}
+interface TypingModeComponentProps {
+  studyCards: IStudyCard[];
+}
 
 const TypingModeComponent: React.FC<TypingModeComponentProps> = () => {
   return (
