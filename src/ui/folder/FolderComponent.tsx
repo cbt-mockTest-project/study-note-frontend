@@ -30,6 +30,8 @@ import StudyNoteList from "./StudyNoteList";
 import useFolder from "./useFolder";
 import FolderSkeleton from "./FolderSkeleton";
 import StudySelectModal from "./StudySelectModal";
+import useMe from "@/lib/hooks/useMe";
+import { IStudySetting } from "@/types/history";
 
 const FolderComponentBlock = styled.div`
   position: relative;
@@ -119,6 +121,7 @@ interface FolderComponentProps {
 
 const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
   const router = useRouter();
+  const { me } = useMe();
   const { folder, setFolder, setNotes, isLoadingFolder } = useFolder(id);
   const [updateFolderInput, setUpdateFolderInput] = useState<PatchFolderInput>({
     name: folder?.name,
@@ -128,6 +131,8 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
   const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
   const [updateFolderLoading, setUpdateFolderLoading] = useState(false);
   const [deleteFolderLoading, setDeleteFolderLoading] = useState(false);
+  const [prevStudySetting, setPrevStudySetting] =
+    useState<IStudySetting | null>(null);
   const [isFolderControlModalVisible, setIsFolderControlModalVisible] =
     useState(false);
   const [isAddStudyNoteModalVisible, setIsAddStudyNoteModalVisible] =
@@ -197,8 +202,16 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
     },
   ];
   useEffect(() => {
-    console.log(selectedNoteIds);
-  }, [selectedNoteIds]);
+    if (!me || !folder) return;
+    const user = me.data.user;
+    const history = user.history.studySettings.findIndex(
+      (studySetting) => studySetting.folderId === folder.id
+    );
+    if (history === -1) return;
+    const studySetting = user.history.studySettings[history];
+    setPrevStudySetting(studySetting);
+    setSelectedNoteIds(studySetting.studyNoteIds);
+  }, [me, folder]);
 
   if (!folder || isLoadingFolder) return <FolderSkeleton />;
 
@@ -325,6 +338,7 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
           folderId={folder.id}
           studyNoteIds={selectedNoteIds}
           open={isStudyStartModalVisible}
+          prevStudySetting={prevStudySetting}
           onCancel={() => setIsStudyStartModalVisible(false)}
         />
       )}

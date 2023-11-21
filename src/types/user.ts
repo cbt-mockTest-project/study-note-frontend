@@ -1,3 +1,5 @@
+import { IHistory } from "./history";
+
 export interface IUser {
   id: number;
   nickname: string;
@@ -5,4 +7,5 @@ export interface IUser {
   picture: string;
   createdAt: string;
   updatedAt: string;
+  history: IHistory;
 }

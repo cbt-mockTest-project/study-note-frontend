@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import parse from "html-react-parser";
 import { CardScoreLevel, IStudyCard } from "@/types/studyCard";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -14,11 +12,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Image, message } from "antd";
 import { postCardScoreAPI } from "@/lib/apis/cardScore";
 
-interface AnswerModeCardItemBlockProps {
-  isAnswerHidden: boolean;
-}
-
-const AnswerModeCardItemBlock = styled.div<AnswerModeCardItemBlockProps>`
+const AnswerModeCardItemBlock = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -45,19 +39,20 @@ const AnswerModeCardItemBlock = styled.div<AnswerModeCardItemBlockProps>`
   .answer-mode-answer-box {
     margin-top: 20px;
   }
-  .answer-mode-study-card-answer {
-    ${(props) =>
-      props.isAnswerHidden &&
-      css`
-        filter: blur(100px);
-      `}
-  }
+
   .answer-mode-study-card-image {
     width: 100%;
     height: 200px;
     object-fit: contain;
     margin-top: 10px;
     border-radius: 5px;
+  }
+  .answer-mode-study-card-anwswer-wrapper {
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .answer-mode-study-card-anwswer-wrapper.hidden {
+    opacity: 0;
   }
   .answer-mode-study-tool-box-wrapper {
     width: 60px;
@@ -139,7 +134,7 @@ const AnswerModeCardItem: React.FC<AnswerModeCardItemProps> = ({
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);
   return (
-    <AnswerModeCardItemBlock isAnswerHidden={isAnswerHidden}>
+    <AnswerModeCardItemBlock>
       <Card className="answer-mode-study-card">
         <div className="answer-mode-study-content-wrapper">
           <p className="answer-mode-study-card-number">{index + 1}번</p>
@@ -156,16 +151,22 @@ const AnswerModeCardItem: React.FC<AnswerModeCardItemProps> = ({
           )}
           <div className="answer-mode-answer-box">
             <p className="answer-mode-study-card-answer-label">정답</p>
-            <div className="answer-mode-study-card-answer">
-              {parse(studyCard.answer)}
+            <div
+              className={`answer-mode-study-card-anwswer-wrapper ${
+                isAnswerHidden ? "hidden" : ""
+              }`}
+            >
+              <div className="answer-mode-study-card-answer">
+                {parse(studyCard.answer)}
+              </div>
+              {studyCard.answer_img && (
+                <Image
+                  className="answer-mode-study-card-image"
+                  src={studyCard.answer_img}
+                  alt="문제이미지"
+                />
+              )}
             </div>
-            {studyCard.answer_img && (
-              <Image
-                className="answer-mode-study-card-image"
-                src={studyCard.answer_img}
-                alt="문제이미지"
-              />
-            )}
           </div>
         </div>
         {/* <div className="answer-mode-study-tool-box-wrapper">

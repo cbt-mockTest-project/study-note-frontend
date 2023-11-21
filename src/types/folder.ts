@@ -28,3 +28,8 @@ export enum StudyMode {
   ANSWER = "answer",
   TYPYING = "typing",
 }
+
+export enum StudyOrder {
+  NORMAL = "normal",
+  RANDOM = "random",
+}

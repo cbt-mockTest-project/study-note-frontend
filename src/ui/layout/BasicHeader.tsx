@@ -2,11 +2,7 @@ import { colors } from "@/styles/colors";
 import React from "react";
 import styled from "styled-components";
 
-interface BasicHeaderBlockProps {
-  justifyContent: string;
-}
-
-const BasicHeaderBlock = styled.div<BasicHeaderBlockProps>`
+const BasicHeaderBlock = styled.div`
   position: sticky;
   top: 0;
   border-bottom: 1px solid ${colors.gray_300};
@@ -22,7 +18,7 @@ const BasicHeaderBlock = styled.div<BasicHeaderBlockProps>`
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: ${(props) => props.justifyContent};
+    justify-content: space-between;
     margin: 0 auto;
   }
 `;
@@ -30,16 +26,14 @@ const BasicHeaderBlock = styled.div<BasicHeaderBlockProps>`
 interface BasicHeaderProps {
   children?: React.ReactNode;
   className?: string;
-  justifyContent?: string;
 }
 
 const BasicHeader: React.FC<BasicHeaderProps> = ({
   className = "",
   children,
-  justifyContent = "space-between",
 }) => {
   return (
-    <BasicHeaderBlock className={className} justifyContent={justifyContent}>
+    <BasicHeaderBlock className={className}>
       <div className="basic-header-inner">{children}</div>
     </BasicHeaderBlock>
   );

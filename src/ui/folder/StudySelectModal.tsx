@@ -1,14 +1,16 @@
 import { colors } from "@/styles/colors";
 import { Button, Checkbox, InputNumber, Modal, ModalProps, Radio } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import ClearIcon from "@mui/icons-material/Clear";
-import { StudyMode } from "@/types/folder";
+import { StudyMode, StudyOrder } from "@/types/folder";
 import { useRouter } from "next/navigation";
 import { addQueryParams } from "@/lib/utils/addQueryParams";
 import { CardScoreLevel } from "@/types/studyCard";
 import { saveHistoryAPI } from "@/lib/apis/history";
+import { IStudySetting } from "@/types/history";
+import useMe from "@/lib/hooks/useMe";
 
 const StudySelectModalBlock = styled(Modal)`
   .study-select-random-checkbox-wrapper,
@@ -49,13 +51,15 @@ const StudySelectModalBlock = styled(Modal)`
 interface StudySelectModalProps extends Omit<ModalProps, "children"> {
   studyNoteIds: number[];
   folderId: number;
+  prevStudySetting?: IStudySetting | null;
 }
 
 const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
-  const { studyNoteIds, folderId, ...modalProps } = props;
+  const { studyNoteIds, folderId, prevStudySetting, ...modalProps } = props;
+  const { me } = useMe();
   const router = useRouter();
   const [mode, setMode] = React.useState<StudyMode>(StudyMode.ANSWER);
-  const [isRandom, setIsRandom] = React.useState<boolean>(false);
+  const [order, setOrder] = React.useState<StudyOrder>(StudyOrder.NORMAL);
   const [scores, setScores] = React.useState<CardScoreLevel[]>([]);
   const [limit, setLimit] = React.useState<number | null>(null);
   const handleScoreChange = (score: CardScoreLevel) => {
@@ -75,21 +79,33 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
 
   const handleStart = () => {
     const params = addQueryParams(`/study/${mode}`, {
-      order: isRandom ? "random" : "normal",
+      order: order ? "random" : "normal",
       scores: scores.join(","),
       limit: limit ? limit.toString() : "",
       studyNoteIds: studyNoteIds.join(","),
     });
-    saveHistoryAPI({
-      selectedNoteIds: { noteIds: studyNoteIds, folderId },
-      studySetting: {
-        order: isRandom ? "random" : "normal",
-        scores: scores,
-        limit: limit,
-      },
-    }).catch((e) => console.log(e));
+    if (me?.data.user) {
+      saveHistoryAPI({
+        studySetting: {
+          folderId,
+          studyNoteIds,
+          mode,
+          limit,
+          order,
+          scores,
+        },
+      }).catch((e) => console.log(e));
+    }
     router.push(params);
   };
+
+  useEffect(() => {
+    if (!prevStudySetting) return;
+    prevStudySetting.mode && setMode(prevStudySetting.mode);
+    prevStudySetting.order && setOrder(prevStudySetting.order);
+    prevStudySetting.scores && setScores(prevStudySetting.scores);
+    prevStudySetting.limit && setLimit(prevStudySetting.limit);
+  }, [prevStudySetting]);
   return (
     <StudySelectModalBlock {...modalProps} title="학습 설정하기">
       <div>
@@ -113,8 +129,14 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
           <label className="study-select-label">* 문제 순서</label>
           <div>
             <Checkbox
-              checked={isRandom}
-              onClick={() => setIsRandom((prev) => !prev)}
+              checked={order === StudyOrder.RANDOM}
+              onClick={() =>
+                setOrder((prev) =>
+                  prev === StudyOrder.RANDOM
+                    ? StudyOrder.NORMAL
+                    : StudyOrder.RANDOM
+                )
+              }
             >
               랜덤
             </Checkbox>
