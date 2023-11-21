@@ -4,14 +4,15 @@ import Card from "@/ui/common/card/Card";
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import parse from "html-react-parser";
-import { IStudyCard } from "@/types/studyCard";
+import { CardScoreLevel, IStudyCard } from "@/types/studyCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import ClearIcon from "@mui/icons-material/Clear";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Button, Image } from "antd";
+import { Image, message } from "antd";
+import { postCardScoreAPI } from "@/lib/apis/cardScore";
 
 interface AnswerModeCardItemBlockProps {
   isAnswerHidden: boolean;
@@ -99,6 +100,10 @@ const AnswerModeCardItemBlock = styled.div<AnswerModeCardItemBlockProps>`
       font-size: 20px;
     }
   }
+  .answer-mode-control-button.active {
+    border-color: ${colors.blue_700};
+    color: ${colors.blue_700};
+  }
 `;
 
 interface AnswerModeCardItemProps {
@@ -113,6 +118,23 @@ const AnswerModeCardItem: React.FC<AnswerModeCardItemProps> = ({
   isAnswerAllHidden,
 }) => {
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
+  const [currentScore, setCurrentScore] = useState<CardScoreLevel | null>(
+    studyCard.myScore
+  );
+  const handleChangeScore = async (score: CardScoreLevel) => {
+    const prevScore = currentScore;
+    try {
+      setCurrentScore(score);
+      const { data } = await postCardScoreAPI({
+        id: studyCard.id,
+        body: { score },
+      });
+      if (data.error) message.error(data.error);
+    } catch (e) {
+      setCurrentScore(prevScore);
+      console.log(e);
+    }
+  };
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);
@@ -156,10 +178,20 @@ const AnswerModeCardItem: React.FC<AnswerModeCardItemProps> = ({
         </div>
       </Card>
       <Card className="answer-mode-control-box">
-        <button className="answer-mode-control-button">
+        <button
+          onClick={() => handleChangeScore(CardScoreLevel.HiGH)}
+          className={`answer-mode-control-button ${
+            currentScore === CardScoreLevel.HiGH ? "active" : ""
+          }`}
+        >
           <PanoramaFishEyeIcon />
         </button>
-        <button className="answer-mode-control-button">
+        <button
+          onClick={() => handleChangeScore(CardScoreLevel.LOW)}
+          className={`answer-mode-control-button ${
+            currentScore === CardScoreLevel.LOW ? "active" : ""
+          }`}
+        >
           <ClearIcon />
         </button>
         <button

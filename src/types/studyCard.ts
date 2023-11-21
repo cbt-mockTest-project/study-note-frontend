@@ -6,6 +6,7 @@ export interface IStudyCard {
   answer: string;
   question_img: string;
   answer_img: string;
+  myScore: CardScoreLevel | null;
 }
 
 export enum CardScoreLevel {
