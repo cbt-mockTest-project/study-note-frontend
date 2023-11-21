@@ -28,9 +28,3 @@ export enum StudyMode {
   ANSWER = "answer",
   TYPYING = "typing",
 }
-
-export enum StudyScore {
-  HIGH = "high",
-  LOW = "low",
-  NONE = "none",
-}

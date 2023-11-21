@@ -4,9 +4,10 @@ import React from "react";
 import styled from "styled-components";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import ClearIcon from "@mui/icons-material/Clear";
-import { StudyScore, StudyMode } from "@/types/folder";
+import { StudyMode } from "@/types/folder";
 import { useRouter } from "next/navigation";
 import { addQueryParams } from "@/lib/utils/addQueryParams";
+import { CardScoreLevel } from "@/types/studyCard";
 
 const StudySelectModalBlock = styled(Modal)`
   .study-select-random-checkbox-wrapper,
@@ -53,9 +54,9 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
   const router = useRouter();
   const [mode, setMode] = React.useState<StudyMode>(StudyMode.ANSWER);
   const [isRandom, setIsRandom] = React.useState<boolean>(false);
-  const [scores, setScores] = React.useState<StudyScore[]>([]);
+  const [scores, setScores] = React.useState<CardScoreLevel[]>([]);
   const [limit, setLimit] = React.useState<number | null>(null);
-  const handleScoreChange = (score: StudyScore) => {
+  const handleScoreChange = (score: CardScoreLevel) => {
     if (scores.includes(score)) {
       setScores((prev) => prev.filter((s) => s !== score));
     } else {
@@ -66,11 +67,12 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
     if (scores.length === 3) {
       setScores([]);
     } else {
-      setScores([StudyScore.HIGH, StudyScore.LOW, StudyScore.NONE]);
+      setScores([CardScoreLevel.HIGH, CardScoreLevel.LOW, CardScoreLevel.NONE]);
     }
   };
 
   const handleStart = () => {
+    console.log(scores.join(","));
     const params = addQueryParams(`/study/${mode}`, {
       order: isRandom ? "random" : "normal",
       scores: scores.join(","),
@@ -119,20 +121,20 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
               전체
             </Checkbox>
             <Checkbox
-              checked={scores.includes(StudyScore.HIGH)}
-              onClick={() => handleScoreChange(StudyScore.HIGH)}
+              checked={scores.includes(CardScoreLevel.HIGH)}
+              onClick={() => handleScoreChange(CardScoreLevel.HIGH)}
             >
               <PanoramaFishEyeIcon className="study-select-score-icon" />
             </Checkbox>
             <Checkbox
-              checked={scores.includes(StudyScore.LOW)}
-              onClick={() => handleScoreChange(StudyScore.LOW)}
+              checked={scores.includes(CardScoreLevel.LOW)}
+              onClick={() => handleScoreChange(CardScoreLevel.LOW)}
             >
               <ClearIcon className="study-select-score-icon" />
             </Checkbox>
             <Checkbox
-              checked={scores.includes(StudyScore.NONE)}
-              onClick={() => handleScoreChange(StudyScore.NONE)}
+              checked={scores.includes(CardScoreLevel.NONE)}
+              onClick={() => handleScoreChange(CardScoreLevel.NONE)}
             >
               무
             </Checkbox>

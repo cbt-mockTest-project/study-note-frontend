@@ -168,20 +168,20 @@ const AnswerModeCardItem: React.FC<AnswerModeCardItemProps> = ({
             )}
           </div>
         </div>
-        <div className="answer-mode-study-tool-box-wrapper">
+        {/* <div className="answer-mode-study-tool-box-wrapper">
           <button className="answer-mode-study-tool-box-button">
             <EditIcon />
           </button>
           <button className="answer-mode-study-tool-box-button">
             <DeleteIcon />
           </button>
-        </div>
+        </div> */}
       </Card>
       <Card className="answer-mode-control-box">
         <button
-          onClick={() => handleChangeScore(CardScoreLevel.HiGH)}
+          onClick={() => handleChangeScore(CardScoreLevel.HIGH)}
           className={`answer-mode-control-button ${
-            currentScore === CardScoreLevel.HiGH ? "active" : ""
+            currentScore === CardScoreLevel.HIGH ? "active" : ""
           }`}
         >
           <PanoramaFishEyeIcon />
