@@ -322,6 +322,7 @@ const FolderComponent: React.FC<FolderComponentProps> = ({ id }) => {
       {isStudyStartModalVisible && (
         <StudySelectModal
           footer={null}
+          folderId={folder.id}
           studyNoteIds={selectedNoteIds}
           open={isStudyStartModalVisible}
           onCancel={() => setIsStudyStartModalVisible(false)}

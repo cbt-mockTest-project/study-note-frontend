@@ -8,6 +8,7 @@ import { StudyMode } from "@/types/folder";
 import { useRouter } from "next/navigation";
 import { addQueryParams } from "@/lib/utils/addQueryParams";
 import { CardScoreLevel } from "@/types/studyCard";
+import { saveHistoryAPI } from "@/lib/apis/history";
 
 const StudySelectModalBlock = styled(Modal)`
   .study-select-random-checkbox-wrapper,
@@ -47,10 +48,11 @@ const StudySelectModalBlock = styled(Modal)`
 
 interface StudySelectModalProps extends Omit<ModalProps, "children"> {
   studyNoteIds: number[];
+  folderId: number;
 }
 
 const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
-  const { studyNoteIds, ...modalProps } = props;
+  const { studyNoteIds, folderId, ...modalProps } = props;
   const router = useRouter();
   const [mode, setMode] = React.useState<StudyMode>(StudyMode.ANSWER);
   const [isRandom, setIsRandom] = React.useState<boolean>(false);
@@ -72,13 +74,20 @@ const StudySelectModal: React.FC<StudySelectModalProps> = (props) => {
   };
 
   const handleStart = () => {
-    console.log(scores.join(","));
     const params = addQueryParams(`/study/${mode}`, {
       order: isRandom ? "random" : "normal",
       scores: scores.join(","),
       limit: limit ? limit.toString() : "",
       studyNoteIds: studyNoteIds.join(","),
     });
+    saveHistoryAPI({
+      selectedNoteIds: { noteIds: studyNoteIds, folderId },
+      studySetting: {
+        order: isRandom ? "random" : "normal",
+        scores: scores,
+        limit: limit,
+      },
+    }).catch((e) => console.log(e));
     router.push(params);
   };
   return (
